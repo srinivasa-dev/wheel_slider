@@ -138,7 +138,7 @@ class _WheelSliderState extends State<WheelSlider> {
          widget.background,
           WheelChooser.custom(
             onValueChanged: (val) async {
-              if(widget.isVibrate) await HapticFeedback.vibrate();
+              if(widget.isVibrate) await HapticFeedback.selectionClick();
               setState(() {
                 widget.onValueChanged(val);
               });
