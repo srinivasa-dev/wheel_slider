@@ -68,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _currentValue = val;
                 });
               },
+              hapticFeedbackType: HapticFeedbackType.vibrate,
             ),
             Text(
               _currentValue.toString(),
@@ -100,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _nCurrentValue = val;
                 });
               },
+              hapticFeedbackType: HapticFeedbackType.heavyImpact,
             ),
             const SizedBox(
               height: 30.0,

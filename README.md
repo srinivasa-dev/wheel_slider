@@ -61,6 +61,7 @@ WheelSlider(
           _currentValue = val;
         });
     },
+    hapticFeedbackType: HapticFeedbackType.vibrate,
 ),
 ```
 
@@ -81,6 +82,7 @@ WheelSlider.number(
           _nCurrentValue = val;
         });
     },
+    hapticFeedbackType: HapticFeedbackType.heavyImpact,
 ),
 ```
 
@@ -90,6 +92,7 @@ WheelSlider.number(
 * `perspective` - Change the way you want the slider to look from a flat to a wheel like shape and the value must be <= 0.01.
 * `squeeze` - Adjust the spacing between each item in the slider.
 * `isVibrate` - To turn on/off vibration while scrolling.
+* `hapticFeedbackType` - Allows you to change the vibration type.
 * `itemSize` - Size of each item in the slider.
 * `background` - Use any widget to add as a background to the slider.
 
