@@ -1,3 +1,10 @@
+## 1.1.0
+
+- Updated dependent plugin to the latest version.
+- Added property `scrollPhysics`
+- Added property `allowPointerTappable`
+- Added support for Custom Pointer
+
 ## 1.0.1
 
 - Added support for selecting a vibration type

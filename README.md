@@ -4,7 +4,7 @@ Wheel Slider allows you to scroll through with a wheel like look, which have a b
 
 [![pub package](https://img.shields.io/pub/v/wheel_slider)](https://pub.dev/packages/wheel_slider) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-![gif of wheel slider](https://media.giphy.com/media/hEfuhVz0l1Orqlar8V/giphy.gif)
+![gif of wheel slider](https://media.giphy.com/media/9UEQaajfcnQF2j7kos/giphy.gif)
 
 > Wheel Slider is built upon [`wheel_chooser`](https://pub.dev/packages/wheel_chooser)
 
@@ -95,4 +95,7 @@ WheelSlider.number(
 * `hapticFeedbackType` - Allows you to change the vibration type.
 * `itemSize` - Size of each item in the slider.
 * `background` - Use any widget to add as a background to the slider.
-
+* `allowPointerTappable`:
+    * When this is set to `false` scroll functionality won't work for the occupied region.
+    * When using customPointer with GestureDetector/InkWell, set it to `false` to enable gestures.
+    * When using default pointer set it to default state i.e `true`.

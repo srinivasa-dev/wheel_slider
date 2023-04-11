@@ -11,15 +11,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.grey[700],
-      ),
-      themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
@@ -69,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               hapticFeedbackType: HapticFeedbackType.vibrate,
+              pointerColor: Colors.redAccent,
             ),
             Text(
               _currentValue.toString(),
@@ -94,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedNumberStyle: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.redAccent,
               ),
               currentIndex: _nCurrentValue,
               onValueChanged: (val) {
@@ -112,9 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
               perspective: 0.01,
               isVibrate: false,
               background: Container(
-                width: 250,
+                width: 300,
                 height: double.infinity,
-                color: Colors.amberAccent,
+                color: Colors.brown,
+              ),
+              lineColor: Colors.white,
+              customPointer: const ImageIcon(
+                AssetImage('assets/crosshair.png'),
+                color: Colors.black,
+                size: 35.0,
               ),
               onValueChanged: (val) {
 

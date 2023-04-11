@@ -25,9 +25,17 @@ class WheelSlider extends StatefulWidget {
   /// This is a type String, only valid inputs are "default", "light",  "medium", "heavy", "selectionClick".
   final String hapticFeedback;
   final bool showPointer;
+  final Widget? pointer;
+  /// Change pointer into any desired widget.
+  final Widget? customPointer;
   final TextStyle? selectedNumberStyle, unSelectedNumberStyle;
   final List<Widget> children;
   int? currentIndex;
+  final ScrollPhysics? scrollPhysics;
+  /// - When this is set to FALSE scroll functionality won't work for the occupied region.
+  /// - When using customPointer with GestureDetector/InkWell, set it to FALSE to enable gestures.
+  /// - When using default pointer set it to default state i.e TRUE.
+  final bool allowPointerTappable;
 
    WheelSlider({
     Key? key,
@@ -52,12 +60,25 @@ class WheelSlider extends StatefulWidget {
     this.isVibrate = true,
     HapticFeedbackType hapticFeedbackType = HapticFeedbackType.vibrate,
     this.showPointer = true,
+    this.customPointer,
+    this.scrollPhysics,
+    this.allowPointerTappable = true,
   }) : assert(perspective <= 0.01),
-        selectedNumberStyle = null, unSelectedNumberStyle = null,
-        children = barUI(totalCount, horizontal, lineColor),
-        currentIndex = null,
+         selectedNumberStyle = null, unSelectedNumberStyle = null,
+         children = barUI(totalCount, horizontal, lineColor),
+         currentIndex = null,
          hapticFeedback = hapticFeedbackType.value,
+         pointer = customPointer == null
+             ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
         super(key: key);
+
+   static Widget? pointerWidget(Widget? customPointer, bool horizontal, double pointerHeight, double pointerWidth, Color pointerColor) {
+     return customPointer == null ? Container(
+       height: horizontal ? pointerHeight : pointerWidth,
+       width: horizontal ? pointerWidth : pointerHeight,
+       color: pointerColor,
+     ) : null;
+   }
 
    static List<Widget> barUI(totalCount, horizontal, lineColor) {
      return List.generate(totalCount+1, (index) => Container(
@@ -104,9 +125,12 @@ class WheelSlider extends StatefulWidget {
     this.isVibrate = true,
     HapticFeedbackType hapticFeedbackType = HapticFeedbackType.vibrate,
     this.showPointer = false,
+    this.customPointer,
     this.selectedNumberStyle = const TextStyle(fontWeight: FontWeight.bold),
     this.unSelectedNumberStyle = const TextStyle(),
     required this.currentIndex,
+    this.scrollPhysics,
+    this.allowPointerTappable = true,
   }) : assert(perspective <= 0.01),
         lineColor = null,
         children = List.generate(totalCount+1, (index) {
@@ -116,6 +140,8 @@ class WheelSlider extends StatefulWidget {
           );}
         ),
         hapticFeedback = hapticFeedbackType.value,
+        pointer = customPointer == null
+            ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
         super(key: key);
 
   static bool multipleOfFive(int n) {
@@ -179,7 +205,6 @@ class _WheelSliderState extends State<WheelSlider> {
                 widget.onValueChanged(val);
               });
             },
-            datas: List.generate(widget.totalCount+1, (index) => index),
             children: widget.children,
             startPosition: widget.initValue,
             horizontal: widget.horizontal,
@@ -188,15 +213,15 @@ class _WheelSliderState extends State<WheelSlider> {
             perspective: widget.perspective,
             listWidth: widget.listWidth,
             squeeze: widget.squeeze,
+            physics: widget.scrollPhysics,
           ),
-          Visibility(
-            visible: widget.showPointer,
-            child: Container(
-              height: widget.horizontal ? widget.pointerHeight : widget.pointerWidth,
-              width: widget.horizontal ? widget.pointerWidth : widget.pointerHeight,
-              color: widget.pointerColor,
+          IgnorePointer(
+            ignoring: widget.allowPointerTappable,
+            child: Visibility(
+              visible: widget.showPointer,
+              child: widget.customPointer ?? widget.pointer!,
             ),
-          ),
+          ),  // For details on this widget check out the document here https://api.flutter.dev/flutter/widgets/IgnorePointer-class.html
         ],
       ),
     );
