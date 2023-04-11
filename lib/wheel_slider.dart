@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
-
+//ignore: must_be_immutable
 class WheelSlider extends StatefulWidget {
 
   final double horizontalListHeight, horizontalListWidth, verticalListHeight, verticalListWidth;
