@@ -10,9 +10,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          headlineSmall: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20.0,
+          ),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -66,114 +74,153 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              WheelSlider(
-                totalCount: _totalCount,
-                initValue: _initValue,
-                onValueChanged: (val) {
-                  setState(() {
-                    _currentValue = val;
-                  });
-                },
-                hapticFeedbackType: HapticFeedbackType.vibrate,
-                pointerColor: Colors.redAccent,
-              ),
-              Text(
-                _currentValue.toString(),
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  height: 2.0,
-                  fontWeight: FontWeight.w500,
+              box(
+                title: 'Default Wheel Slider',
+                wheelSlider: WheelSlider(
+                  totalCount: _totalCount,
+                  initValue: _initValue,
+                  onValueChanged: (val) {
+                    setState(() {
+                      _currentValue = val;
+                    });
+                  },
+                  hapticFeedbackType: HapticFeedbackType.vibrate,
+                  pointerColor: Colors.redAccent,
+                ),
+                valueText: Text(
+                  _currentValue.toString(),
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    height: 2.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               const SizedBox(
                 height: 30.0,
               ),
-              WheelSlider.number(
-                horizontal: false,
-                verticalListHeight: 300.0,
-                perspective: 0.01,
-                totalCount: _nTotalCount,
-                initValue: _nInitValue,
-                unSelectedNumberStyle: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black54,
-                ),
-                selectedNumberStyle: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.redAccent,
-                ),
-                currentIndex: _nCurrentValue,
-                onValueChanged: (val) {
-                  setState(() {
-                    _nCurrentValue = val;
-                  });
-                },
-                hapticFeedbackType: HapticFeedbackType.heavyImpact,
-              ),
-              const SizedBox(
-                height: 40.0,
-              ),
-              WheelSlider.customWidget(
-                totalCount: _countryList.length,
-                initValue: _cInitValue,
-                isInfinite: false,
-                scrollPhysics: const BouncingScrollPhysics(),
-                children: List.generate(_countryList.length, (index) => Center(
-                  child: Image.asset(
-                    _countryList[index]['flag']!,
-                    scale: _cCurrentValue == index ? null : 1.3,
-                    color: _cCurrentValue == index ? Colors.transparent :Colors.white,
-                    colorBlendMode: BlendMode.color,
+              box(
+                title: 'Numbered Wheel Slider',
+                wheelSlider: WheelSlider.number(
+                  horizontal: false,
+                  verticalListHeight: 300.0,
+                  perspective: 0.01,
+                  totalCount: _nTotalCount,
+                  initValue: _nInitValue,
+                  unSelectedNumberStyle: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black54,
                   ),
-                )),
-                onValueChanged: (val) {
-                  setState(() {
-                    _cCurrentValue = val;
-                  });
-                },
-                hapticFeedbackType: HapticFeedbackType.vibrate,
-                showPointer: false,
-                itemSize: 80,
-              ),
-              Text(
-                _countryList[_cCurrentValue]['name'].toString(),
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  height: 2.0,
-                  fontWeight: FontWeight.w500,
+                  selectedNumberStyle: const TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                  ),
+                  currentIndex: _nCurrentValue,
+                  onValueChanged: (val) {
+                    setState(() {
+                      _nCurrentValue = val;
+                    });
+                  },
+                  hapticFeedbackType: HapticFeedbackType.heavyImpact,
                 ),
               ),
               const SizedBox(
                 height: 40.0,
               ),
-              WheelSlider(
-                totalCount: _totalCount,
-                initValue: _initValue,
-                perspective: 0.01,
-                isVibrate: false,
-                background: Container(
-                  width: 300,
-                  height: double.infinity,
-                  color: Colors.brown,
+              box(
+                title: 'Custom Widget Wheel Slider',
+                wheelSlider: WheelSlider.customWidget(
+                  totalCount: _countryList.length,
+                  initValue: _cInitValue,
+                  isInfinite: false,
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  children: List.generate(_countryList.length, (index) => Center(
+                    child: Image.asset(
+                      _countryList[index]['flag']!,
+                      scale: _cCurrentValue == index ? null : 1.3,
+                      color: _cCurrentValue == index ? Colors.transparent :Colors.white,
+                      colorBlendMode: BlendMode.color,
+                    ),
+                  )),
+                  onValueChanged: (val) {
+                    setState(() {
+                      _cCurrentValue = val;
+                    });
+                  },
+                  hapticFeedbackType: HapticFeedbackType.vibrate,
+                  showPointer: false,
+                  itemSize: 80,
                 ),
-                lineColor: Colors.white,
-                customPointer: const ImageIcon(
-                  AssetImage('assets/crosshair.png'),
-                  color: Colors.black,
-                  size: 35.0,
+                valueText: Text(
+                  _countryList[_cCurrentValue]['name'].toString(),
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    height: 2.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                onValueChanged: (val) {},
+              ),
+              const SizedBox(
+                height: 40.0,
+              ),
+              box(
+                title: 'Custom Pointer Wheel Slider',
+                wheelSlider: WheelSlider(
+                  totalCount: _totalCount,
+                  initValue: _initValue,
+                  perspective: 0.01,
+                  isVibrate: false,
+                  background: Container(
+                    width: 300,
+                    height: double.infinity,
+                    color: Colors.brown,
+                  ),
+                  lineColor: Colors.white,
+                  customPointer: const ImageIcon(
+                    AssetImage('assets/crosshair.png'),
+                    color: Colors.black,
+                    size: 35.0,
+                  ),
+                  onValueChanged: (val) {},
+                ),
+              ),
+              const SizedBox(
+                height: 40.0,
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget box({required String title, required WheelSlider wheelSlider, Text? valueText}) {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border.all(),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20.0,),
+          wheelSlider,
+          valueText ?? Container(),
+        ],
       ),
     );
   }

@@ -154,6 +154,7 @@ class WheelSlider extends StatefulWidget {
     return false;
   }
 
+  /// Gives you the option to replace with your own custom Widget(s).
   WheelSlider.customWidget({
     Key? key,
     this.horizontalListHeight = 50,
