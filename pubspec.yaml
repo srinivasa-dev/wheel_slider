@@ -1,6 +1,6 @@
 name: wheel_slider
-description: Wheel Slider allows you to scroll through with a wheel like look, which have a bunch of customization.
-version: 1.1.0
+description: Wheel Slider offers a lot of customisation and enables you to scroll around with a wheel-like appearance.
+version: 1.1.1
 homepage: https://github.com/srinivasa-dev/wheel_slider
 
 environment:
