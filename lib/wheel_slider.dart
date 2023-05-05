@@ -154,6 +154,42 @@ class WheelSlider extends StatefulWidget {
     return false;
   }
 
+  /// Gives you the option to replace with your own custom Widget(s).
+  WheelSlider.customWidget({
+    Key? key,
+    this.horizontalListHeight = 50,
+    this.horizontalListWidth = double.infinity,
+    this.verticalListHeight = 400.0,
+    this.verticalListWidth = 50.0,
+    required this.totalCount,
+    required this.initValue,
+    required this.onValueChanged,
+    this.itemSize = 10,
+    this.perspective = 0.0007,
+    this.listWidth = 50,
+    this.isInfinite = true,
+    this.horizontal = true,
+    this.squeeze = 1.0,
+    this.pointerColor = Colors.black,
+    this.pointerHeight = 50.0,
+    this.pointerWidth = 3.0,
+    required this.children,
+    this.background = const Center(),
+    this.isVibrate = true,
+    HapticFeedbackType hapticFeedbackType = HapticFeedbackType.vibrate,
+    this.showPointer = true,
+    this.customPointer,
+    this.scrollPhysics,
+    this.allowPointerTappable = true,
+  }) : assert(perspective <= 0.01),
+        lineColor = null,
+        selectedNumberStyle = null, unSelectedNumberStyle = null,
+        currentIndex = null,
+        hapticFeedback = hapticFeedbackType.value,
+        pointer = customPointer == null
+            ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
+        super(key: key);
+
   @override
   State<WheelSlider> createState() => _WheelSliderState();
 }

@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Added support for Custom Widgets
+
 ## 1.1.0
 
 - Updated dependent plugin to the latest version.

@@ -1,21 +1,22 @@
 # Wheel Slider
 
-Wheel Slider allows you to scroll through with a wheel like look, which have a bunch of customization.
+Wheel Slider offers a lot of customisation and enables you to scroll around with a wheel-like appearance.
 
 [![pub package](https://img.shields.io/pub/v/wheel_slider)](https://pub.dev/packages/wheel_slider) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-![gif of wheel slider](https://media.giphy.com/media/9UEQaajfcnQF2j7kos/giphy.gif)
+![gif of wheel slider](https://media.giphy.com/media/2NHFjGDJ9AZsQL02SD/giphy.gif)
 
 > Wheel Slider is built upon [`wheel_chooser`](https://pub.dev/packages/wheel_chooser)
 
 ## Features
 
-* Display numbers instead of lines.
-* Horizontal/Vertical scroll.
-* Vibrate on scroll.
-* Add background widget to the slider.
-* Change _Lines_ or _Pointer_ color.
-* Change `TextStyle` for number slider.
+* 🔢 Display numbers instead of lines.
+* ↔↕ Horizontal/Vertical scroll.
+* 📳 Vibrate on scroll.
+* 🔧 Custom widgets.
+* 🔧 Custom pointer.
+* 🖼️ Add background widget to the slider.
+* 🎨 Change _Lines_ or _Pointer_ color.
 
 ## Getting started
 
@@ -86,6 +87,30 @@ WheelSlider.number(
 ),
 ```
 
+To use __Custom Widget Slider__:
+
+```dart
+WheelSlider.customWidget(
+    totalCount: 12,
+    initValue: 5,
+    isInfinite: false,
+    scrollPhysics: const BouncingScrollPhysics(),
+    children: List.generate(12, (index) => const Center(
+        child: FlutterLogo(
+            size: 100,
+        ),
+    )),
+    onValueChanged: (val) {
+        setState(() {
+          _cCurrentValue = val;
+        });
+    },
+    hapticFeedbackType: HapticFeedbackType.vibrate,
+    showPointer: false,
+    itemSize: 80,
+),
+```
+
 #### Properties
 
 * `currentIndex` - Gets the current value as you scroll the Number Slider.
@@ -96,6 +121,6 @@ WheelSlider.number(
 * `itemSize` - Size of each item in the slider.
 * `background` - Use any widget to add as a background to the slider.
 * `allowPointerTappable`:
-    * When this is set to `false` scroll functionality won't work for the occupied region.
-    * When using customPointer with GestureDetector/InkWell, set it to `false` to enable gestures.
-    * When using default pointer set it to default state i.e `true`.
+  * When this is set to `false` scroll functionality won't work for the occupied region.
+  * When using customPointer with GestureDetector/InkWell, set it to `false` to enable gestures.
+  * When using default pointer set it to default state i.e `true`.
