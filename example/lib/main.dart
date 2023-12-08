@@ -1,3 +1,5 @@
+import 'package:example/wheelslider_with_double.dart';
+import 'package:example/widgets/custom_box.dart';
 import 'package:flutter/material.dart';
 import 'package:wheel_slider/wheel_slider.dart';
 
@@ -33,7 +35,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final int _totalCount = 100;
   final int _initValue = 50;
   int _currentValue = 50;
@@ -80,7 +81,19 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              box(
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const WheelSliderWithDouble()));
+                  },
+                  child: const Text('Examples with double value')),
+              const SizedBox(
+                height: 10.0,
+              ),
+              CustomBox(
                 title: 'Default Wheel Slider',
                 wheelSlider: WheelSlider(
                   totalCount: _totalCount,
@@ -105,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 30.0,
               ),
-              box(
+              CustomBox(
                 title: 'Numbered Wheel Slider',
                 wheelSlider: WheelSlider.number(
                   horizontal: false,
@@ -134,21 +147,25 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 40.0,
               ),
-              box(
+              CustomBox(
                 title: 'Custom Widget Wheel Slider',
                 wheelSlider: WheelSlider.customWidget(
                   totalCount: _countryList.length,
                   initValue: _cInitValue,
                   isInfinite: false,
                   scrollPhysics: const BouncingScrollPhysics(),
-                  children: List.generate(_countryList.length, (index) => Center(
-                    child: Image.asset(
-                      _countryList[index]['flag']!,
-                      scale: _cCurrentValue == index ? null : 1.3,
-                      color: _cCurrentValue == index ? Colors.transparent :Colors.white,
-                      colorBlendMode: BlendMode.color,
-                    ),
-                  )),
+                  children: List.generate(
+                      _countryList.length,
+                      (index) => Center(
+                            child: Image.asset(
+                              _countryList[index]['flag']!,
+                              scale: _cCurrentValue == index ? null : 1.3,
+                              color: _cCurrentValue == index
+                                  ? Colors.transparent
+                                  : Colors.white,
+                              colorBlendMode: BlendMode.color,
+                            ),
+                          )),
                   onValueChanged: (val) {
                     setState(() {
                       _cCurrentValue = val;
@@ -170,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 40.0,
               ),
-              box(
+              CustomBox(
                 title: 'Custom Pointer Wheel Slider',
                 wheelSlider: WheelSlider(
                   totalCount: _totalCount,
@@ -197,30 +214,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget box({required String title, required WheelSlider wheelSlider, Text? valueText}) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        border: Border.all(),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20.0,),
-          wheelSlider,
-          valueText ?? Container(),
-        ],
       ),
     );
   }

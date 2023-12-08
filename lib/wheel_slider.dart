@@ -6,14 +6,17 @@ import 'package:wheel_chooser/wheel_chooser.dart';
 
 //ignore: must_be_immutable
 class WheelSlider extends StatefulWidget {
-
-  final double horizontalListHeight, horizontalListWidth, verticalListHeight, verticalListWidth;
+  final double horizontalListHeight,
+      horizontalListWidth,
+      verticalListHeight,
+      verticalListWidth;
   final int totalCount;
-  final int initValue;
+  final num initValue;
   final Function(dynamic) onValueChanged;
   final double itemSize;
   final double perspective;
   final double listWidth;
+  final double? listHeight;
   final bool isInfinite;
   final bool horizontal;
   final double squeeze;
@@ -22,22 +25,31 @@ class WheelSlider extends StatefulWidget {
   final double pointerHeight, pointerWidth;
   final Widget background;
   final bool isVibrate;
+
   /// This is a type String, only valid inputs are "default", "light",  "medium", "heavy", "selectionClick".
   final String hapticFeedback;
   final bool showPointer;
   final Widget? pointer;
+
   /// Change pointer into any desired widget.
   final Widget? customPointer;
   final TextStyle? selectedNumberStyle, unSelectedNumberStyle;
   final List<Widget> children;
-  int? currentIndex;
+  num? currentIndex;
   final ScrollPhysics? scrollPhysics;
+
   /// - When this is set to FALSE scroll functionality won't work for the occupied region.
   /// - When using customPointer with GestureDetector/InkWell, set it to FALSE to enable gestures.
   /// - When using default pointer set it to default state i.e TRUE.
   final bool allowPointerTappable;
 
-   WheelSlider({
+  /// If using interval field please make sure to update [totalCount] value accordingly.
+  final num? interval;
+  final bool enableAnimation;
+  final Duration animationDuration;
+  final Curve animationType;
+
+  WheelSlider({
     Key? key,
     this.horizontalListHeight = 50,
     this.horizontalListWidth = double.infinity,
@@ -48,7 +60,8 @@ class WheelSlider extends StatefulWidget {
     required this.onValueChanged,
     this.itemSize = 10,
     this.perspective = 0.0007,
-    this.listWidth = 50,
+    this.listWidth = 100,
+    this.listHeight,
     this.isInfinite = true,
     this.horizontal = true,
     this.squeeze = 1.0,
@@ -63,44 +76,65 @@ class WheelSlider extends StatefulWidget {
     this.customPointer,
     this.scrollPhysics,
     this.allowPointerTappable = true,
-  }) : assert(perspective <= 0.01),
-         selectedNumberStyle = null, unSelectedNumberStyle = null,
-         children = barUI(totalCount, horizontal, lineColor),
-         currentIndex = null,
-         hapticFeedback = hapticFeedbackType.value,
-         pointer = customPointer == null
-             ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
+    this.interval = 1,
+    this.enableAnimation = true,
+    this.animationDuration = const Duration(seconds: 1),
+    this.animationType = Curves.easeIn,
+  })  : assert(perspective <= 0.01),
+        selectedNumberStyle = null,
+        unSelectedNumberStyle = null,
+        children = barUI(totalCount, horizontal, lineColor, interval ?? 1),
+        currentIndex = null,
+        hapticFeedback = hapticFeedbackType.value,
+        pointer = customPointer == null
+            ? pointerWidget(customPointer, horizontal, pointerHeight,
+                pointerWidth, pointerColor)
+            : null,
         super(key: key);
 
-   static Widget? pointerWidget(Widget? customPointer, bool horizontal, double pointerHeight, double pointerWidth, Color pointerColor) {
-     return customPointer == null ? Container(
-       height: horizontal ? pointerHeight : pointerWidth,
-       width: horizontal ? pointerWidth : pointerHeight,
-       color: pointerColor,
-     ) : null;
-   }
+  static Widget? pointerWidget(Widget? customPointer, bool horizontal,
+      double pointerHeight, double pointerWidth, Color pointerColor) {
+    return customPointer == null
+        ? Container(
+            height: horizontal ? pointerHeight : pointerWidth,
+            width: horizontal ? pointerWidth : pointerHeight,
+            color: pointerColor,
+          )
+        : null;
+  }
 
-   static List<Widget> barUI(totalCount, horizontal, lineColor) {
-     return List.generate(totalCount+1, (index) => Container(
-       height: horizontal
-           ? multipleOfFive(index) ? 35.0 : 20.0
-           : 1.5,
-       width: horizontal
-           ? 1.5
-           : multipleOfFive(index) ? 35.0 : 20.0,
-       alignment: Alignment.center,
-       child: Container(
-         height: horizontal
-             ? multipleOfFive(index) ? 35.0 : 20.0
-             : 1.5,
-         width: horizontal
-             ? 1.5
-             : multipleOfFive(index) ? 35.0 : 20.0,
-         color: lineColor,
-         alignment: Alignment.center,
-       ),
-     ),);
-   }
+  static List<Widget> barUI(totalCount, horizontal, lineColor, num interval) {
+    return List.generate(
+      totalCount + 1,
+      (index) => Container(
+        height: horizontal
+            ? multipleOfFive(index * (interval))
+                ? 35.0
+                : 20.0
+            : 1.5,
+        width: horizontal
+            ? 1.5
+            : multipleOfFive(index * (interval))
+                ? 35.0
+                : 20.0,
+        alignment: Alignment.center,
+        child: Container(
+          height: horizontal
+              ? multipleOfFive(index * (interval))
+                  ? 35.0
+                  : 20.0
+              : 1.5,
+          width: horizontal
+              ? 1.5
+              : multipleOfFive(index * (interval))
+                  ? 35.0
+                  : 20.0,
+          color: lineColor,
+          alignment: Alignment.center,
+        ),
+      ),
+    );
+  }
 
   /// Displays numbers instead of lines.
   WheelSlider.number({
@@ -114,7 +148,8 @@ class WheelSlider extends StatefulWidget {
     required this.onValueChanged,
     this.itemSize = 40,
     this.perspective = 0.0007,
-    this.listWidth = 50,
+    this.listWidth = 100,
+    this.listHeight,
     this.isInfinite = true,
     this.horizontal = true,
     this.squeeze = 1.0,
@@ -131,20 +166,34 @@ class WheelSlider extends StatefulWidget {
     required this.currentIndex,
     this.scrollPhysics,
     this.allowPointerTappable = true,
-  }) : assert(perspective <= 0.01),
+    this.interval = 1,
+    this.enableAnimation = true,
+    this.animationDuration = const Duration(seconds: 1),
+    this.animationType = Curves.easeIn,
+  })  : assert(perspective <= 0.01),
         lineColor = null,
-        children = List.generate(totalCount+1, (index) {
+        children = List.generate(totalCount + 1, (index) {
           return Container(
             alignment: Alignment.center,
-            child: Text(index.toString(), style: index == currentIndex ? selectedNumberStyle : unSelectedNumberStyle,),
-          );}
-        ),
+            child: Text(
+              (index * (interval ?? 1)).toStringAsFixed(
+                  interval.toString().contains('.')
+                      ? interval.toString().split('.').last.length
+                      : 0),
+              style: (index * (interval ?? 1)) == currentIndex
+                  ? selectedNumberStyle
+                  : unSelectedNumberStyle,
+            ),
+          );
+        }),
         hapticFeedback = hapticFeedbackType.value,
         pointer = customPointer == null
-            ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
+            ? pointerWidget(customPointer, horizontal, pointerHeight,
+                pointerWidth, pointerColor)
+            : null,
         super(key: key);
 
-  static bool multipleOfFive(int n) {
+  static bool multipleOfFive(num n) {
     while (n > 0) {
       n = n - 5;
     }
@@ -166,7 +215,8 @@ class WheelSlider extends StatefulWidget {
     required this.onValueChanged,
     this.itemSize = 10,
     this.perspective = 0.0007,
-    this.listWidth = 50,
+    this.listWidth = 100,
+    this.listHeight,
     this.isInfinite = true,
     this.horizontal = true,
     this.squeeze = 1.0,
@@ -181,13 +231,20 @@ class WheelSlider extends StatefulWidget {
     this.customPointer,
     this.scrollPhysics,
     this.allowPointerTappable = true,
-  }) : assert(perspective <= 0.01),
+    this.enableAnimation = true,
+    this.animationDuration = const Duration(seconds: 1),
+    this.animationType = Curves.easeIn,
+  })  : assert(perspective <= 0.01),
         lineColor = null,
-        selectedNumberStyle = null, unSelectedNumberStyle = null,
+        selectedNumberStyle = null,
+        unSelectedNumberStyle = null,
         currentIndex = null,
         hapticFeedback = hapticFeedbackType.value,
         pointer = customPointer == null
-            ? pointerWidget(customPointer, horizontal, pointerHeight, pointerWidth, pointerColor) : null,
+            ? pointerWidget(customPointer, horizontal, pointerHeight,
+                pointerWidth, pointerColor)
+            : null,
+        interval = 1,
         super(key: key);
 
   @override
@@ -203,51 +260,100 @@ class HapticFeedbackType {
   static const HapticFeedbackType lightImpact = HapticFeedbackType._('light');
   static const HapticFeedbackType mediumImpact = HapticFeedbackType._('medium');
   static const HapticFeedbackType heavyImpact = HapticFeedbackType._('heavy');
-  static const HapticFeedbackType selectionClick = HapticFeedbackType._('selectionClick');
-  static List<HapticFeedbackType> values = [vibrate, lightImpact, mediumImpact, heavyImpact, selectionClick];
+  static const HapticFeedbackType selectionClick =
+      HapticFeedbackType._('selectionClick');
+  static List<HapticFeedbackType> values = [
+    vibrate,
+    lightImpact,
+    mediumImpact,
+    heavyImpact,
+    selectionClick
+  ];
 
   factory HapticFeedbackType.fromString(String input) =>
       values.firstWhere((element) => element.value == input);
 }
 
 class _WheelSliderState extends State<WheelSlider> {
+  final FixedExtentScrollController _scrollController =
+      FixedExtentScrollController();
+
+  Future<int> getItemIndex() async {
+    for (int i = 0; i < widget.totalCount; i++) {
+      if (i * (widget.interval ?? 1) == widget.initValue) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      int itemIndex = await getItemIndex();
+      if (_scrollController.hasClients) {
+        if (widget.enableAnimation) {
+          _scrollController.animateToItem(itemIndex,
+              duration: widget.animationDuration, curve: widget.animationType);
+        } else {
+          _scrollController.jumpToItem(
+            itemIndex,
+          );
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.horizontal ? widget.horizontalListHeight : widget.verticalListHeight,
-      width: widget.horizontal ? widget.horizontalListWidth : widget.verticalListWidth,
+      height: widget.horizontal
+          ? widget.horizontalListHeight
+          : widget.verticalListHeight,
+      width: widget.horizontal
+          ? widget.horizontalListWidth
+          : widget.verticalListWidth,
       child: Stack(
         alignment: Alignment.center,
         children: [
-         widget.background,
+          widget.background,
           WheelChooser.custom(
+            controller: _scrollController,
             onValueChanged: (val) async {
-              if(widget.isVibrate) {
-                if(widget.hapticFeedback == 'vibrate') {
+              if (widget.isVibrate) {
+                if (widget.hapticFeedback == 'vibrate') {
                   await HapticFeedback.vibrate();
-                } else if(widget.hapticFeedback == 'light') {
+                } else if (widget.hapticFeedback == 'light') {
                   await HapticFeedback.lightImpact();
-                } else if(widget.hapticFeedback == 'medium') {
+                } else if (widget.hapticFeedback == 'medium') {
                   await HapticFeedback.mediumImpact();
-                } else if(widget.hapticFeedback == 'heavy') {
+                } else if (widget.hapticFeedback == 'heavy') {
                   await HapticFeedback.heavyImpact();
-                } else if(widget.hapticFeedback == 'selectionClick') {
+                } else if (widget.hapticFeedback == 'selectionClick') {
                   await HapticFeedback.selectionClick();
                 } else {
                   await HapticFeedback.vibrate();
                 }
               }
               setState(() {
-                widget.onValueChanged(val);
+                widget.onValueChanged(val * (widget.interval ?? 1));
               });
             },
             children: widget.children,
-            startPosition: widget.initValue,
+            startPosition: null,
             horizontal: widget.horizontal,
             isInfinite: widget.isInfinite,
             itemSize: widget.itemSize,
             perspective: widget.perspective,
             listWidth: widget.listWidth,
+            listHeight: widget.listHeight,
             squeeze: widget.squeeze,
             physics: widget.scrollPhysics,
           ),
@@ -257,10 +363,10 @@ class _WheelSliderState extends State<WheelSlider> {
               visible: widget.showPointer,
               child: widget.customPointer ?? widget.pointer!,
             ),
-          ),  // For details on this widget check out the document here https://api.flutter.dev/flutter/widgets/IgnorePointer-class.html
+          ),
+          // For details on this widget check out the document here https://api.flutter.dev/flutter/widgets/IgnorePointer-class.html
         ],
       ),
     );
   }
 }
-
