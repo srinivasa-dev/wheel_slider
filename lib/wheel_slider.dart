@@ -48,6 +48,7 @@ class WheelSlider extends StatefulWidget {
   final bool enableAnimation;
   final Duration animationDuration;
   final Curve animationType;
+  final FixedExtentScrollController? controller;
 
   WheelSlider({
     Key? key,
@@ -75,6 +76,7 @@ class WheelSlider extends StatefulWidget {
     this.showPointer = true,
     this.customPointer,
     this.scrollPhysics,
+    this.controller,
     this.allowPointerTappable = true,
     this.interval = 1,
     this.enableAnimation = true,
@@ -165,6 +167,7 @@ class WheelSlider extends StatefulWidget {
     this.unSelectedNumberStyle = const TextStyle(),
     required this.currentIndex,
     this.scrollPhysics,
+    this.controller,
     this.allowPointerTappable = true,
     this.interval = 1,
     this.enableAnimation = true,
@@ -217,6 +220,7 @@ class WheelSlider extends StatefulWidget {
     this.perspective = 0.0007,
     this.listWidth = 100,
     this.listHeight,
+    this.controller,
     this.isInfinite = true,
     this.horizontal = true,
     this.squeeze = 1.0,
@@ -275,8 +279,7 @@ class HapticFeedbackType {
 }
 
 class _WheelSliderState extends State<WheelSlider> {
-  final FixedExtentScrollController _scrollController =
-      FixedExtentScrollController();
+  FixedExtentScrollController? _scrollController;
 
   Future<int> getItemIndex() async {
     for (int i = 0; i < widget.totalCount; i++) {
@@ -287,16 +290,22 @@ class _WheelSliderState extends State<WheelSlider> {
     return 0;
   }
 
+  FixedExtentScrollController get controller {
+    if (widget.controller != null) return widget.controller!;
+    _scrollController ??= FixedExtentScrollController();
+    return _scrollController!;
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       int itemIndex = await getItemIndex();
-      if (_scrollController.hasClients) {
+      if (controller.hasClients) {
         if (widget.enableAnimation) {
-          _scrollController.animateToItem(itemIndex,
+          controller.animateToItem(itemIndex,
               duration: widget.animationDuration, curve: widget.animationType);
         } else {
-          _scrollController.jumpToItem(
+          controller.jumpToItem(
             itemIndex,
           );
         }
@@ -307,7 +316,7 @@ class _WheelSliderState extends State<WheelSlider> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController?.dispose();
     super.dispose();
   }
 
@@ -325,7 +334,7 @@ class _WheelSliderState extends State<WheelSlider> {
         children: [
           widget.background,
           WheelChooser.custom(
-            controller: _scrollController,
+            controller: controller,
             onValueChanged: (val) async {
               if (widget.isVibrate) {
                 if (widget.hapticFeedback == 'vibrate') {
