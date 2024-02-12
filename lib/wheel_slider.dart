@@ -287,6 +287,10 @@ class _WheelSliderState extends State<WheelSlider> {
     return 0;
   }
 
+  void scrollTo(int itemIndex, Duration duration, Curve curve) {
+    _scrollController.animateToItem(itemIndex, duration: duration, curve: curve);
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
