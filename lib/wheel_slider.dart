@@ -342,9 +342,11 @@ class _WheelSliderState extends State<WheelSlider> {
                   await HapticFeedback.vibrate();
                 }
               }
-              setState(() {
-                widget.onValueChanged(val * (widget.interval ?? 1));
-              });
+              if (mounted) {
+                setState(() {
+                  widget.onValueChanged(val * (widget.interval ?? 1));
+                });
+              }
             },
             children: widget.children,
             startPosition: null,
