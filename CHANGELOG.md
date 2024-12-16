@@ -1,3 +1,9 @@
+## 1.2.2
+
+- Added field `controller`
+- Resolved issue [#15](https://github.com/srinivasa-dev/wheel_slider/issues/15)
+- Enhanced documentation
+
 ## 1.2.1
 
 - Added support for `double`
