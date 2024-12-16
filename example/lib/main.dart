@@ -61,6 +61,22 @@ class _HomeScreenState extends State<HomeScreen> {
     {'flag': 'assets/usa.png', 'name': 'USA'},
   ];
 
+  final FixedExtentScrollController _scrollController = FixedExtentScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _scrollController.animateToItem(_currentValue, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               CustomBox(
                 title: 'Default Wheel Slider',
                 wheelSlider: WheelSlider(
+                  controller: _scrollController,
                   totalCount: _totalCount,
                   initValue: _initValue,
                   onValueChanged: (val) {
@@ -105,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   hapticFeedbackType: HapticFeedbackType.vibrate,
                   pointerColor: Colors.redAccent,
+                  enableAnimation: false,
                 ),
                 valueText: Text(
                   _currentValue.toString(),

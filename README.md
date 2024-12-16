@@ -1,56 +1,51 @@
 # Wheel Slider
 
-Wheel Slider offers a lot of customisation and enables you to scroll around with a wheel-like appearance.
+A versatile and highly customizable slider widget for Flutter, with a wheel-like scrolling appearance.
 
 [![pub package](https://img.shields.io/pub/v/wheel_slider)](https://pub.dev/packages/wheel_slider) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ![gif of wheel slider](https://media.giphy.com/media/2NHFjGDJ9AZsQL02SD/giphy.gif)
 ![gif of wheel slider](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnd3cHZxeXpoNHUzOHZkY2c5ZjczY3Y5cmNoNTUwaGFxc2ZoZ2lwdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/m7yxCFXyJZIAOWTSI2/giphy.gif)
 
-> Wheel Slider is built upon [`wheel_chooser`](https://pub.dev/packages/wheel_chooser)
+> Built on top of [`wheel_chooser`](https://pub.dev/packages/wheel_chooser) for an enhanced experience.
 
-## Features
+## ✨ Features
 
-* 🔢 Display numbers instead of lines.
-* ↔↕ Horizontal/Vertical scroll.
-* 📳 Vibrate on scroll.
-* 🔧 Custom widgets.
-* 🔧 Custom pointer.
-* 🖼️ Add background widget to the slider.
-* 🎨 Change _Lines_ or _Pointer_ color.
+- **🔢 Number Display**: Show numbers instead of simple lines.
+- **↔↕ Scroll Orientation**: Horizontal and vertical scrolling options.
+- **📳 Haptic Feedback**: Vibrates during scroll for a tactile experience.
+- **🔧 Custom Widgets**: Fully customizable items and pointers.
+- **🖼️ Background Support**: Add a widget as the slider's background.
+- **🎨 Styling Options**: Easily customize line and pointer colors.
 
-## Getting started
+## 🚀 Getting Started
 
-#### Installation
-
-Add `wheel_slider:` to your `pubspec.yaml` dependencies then run `flutter pub get`.
+### Installation
+Add the following to your `pubspec.yaml` under `dependencies`:
 
 ```yaml
   dependencies:
     wheel_slider:
 ```
 #### Import
-Add this line to import the package.
 
 ```dart 
 import 'package:wheel_slider/wheel_slider.dart';
 ```
 
-### Android
+### Android Permissions
 
-Add the vibrate permission to your AndroidManifest.xml file, located in `<project root>/android/app/src/main/AndroidManifest.xml`.
-
-* `android.permission.VIBRATE` - allows access to the vibrator.
+Add the vibration permission to your `AndroidManifest.xml` file:
 
 ```xml
 <uses-permission android:name="android.permission.VIBRATE"/>
 ```
 
-### IOS
+### IOS Compatibility
 
 Supports vibration with duration and pattern on CoreHaptics devices. On older devices, the pattern is emulated with 500ms long vibrations.
 
-## Usage
+## 📖 Usage
 
 To use __Line Slider__:
 
@@ -150,8 +145,9 @@ WheelSlider.customWidget(
 ),
 ```
 
-#### Properties
+#### 🛠️ Properties
 
+* `controller` - A `FixedExtentScrollController` that allows you to manage and control the scroll position of the slider.
 * `interval` - To display decimal values. By default it is set to 1, when changed `totalCount` also to be updated accordingly.
 * `currentIndex` - Gets the current value as you scroll the Number Slider.
 * `perspective` - Change the way you want the slider to look from a flat to a wheel like shape and the value must be <= 0.01.
